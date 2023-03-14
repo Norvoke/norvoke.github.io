@@ -9,15 +9,16 @@ website:
     right:
       - about.qmd
       - icon: github
-        href: https://github.com/
+        href: https://github.com/Norvoke/norvoke.github.io
       - icon: twitter
         href: https://twitter.com
 
 format:
   html:
-    title-block-banner: img/landscape.png
-    title-block-banner-color: white
-    theme: cosmo
+    title-block-banner: img/snow.jpg
+    title-block-banner-color: black
+    theme: minty
+    fontcolor: "#2F4F4F"
     css: styles.css
 
 

@@ -14,6 +14,13 @@
     "text": "Math\nIn addition to regular text using the Markdown specification, you can also write mathematics, enclosed between dollar signs. The syntax for writing math is very similar to the syntax used in the \\(\\LaTeX\\) markup language. For example, $f(x) \\approx y$ renders to \\(f(x) \\approx y\\). To place complex mathematical expressions on their own lines, use double dollar signs. For example, the expression\n$$\\mathcal{L}(a, b) = \\sum_{i = 1}^n (ax_i + b - y_i)^2$$\nrenders to:\n\\[\\mathcal{L}(a, b) = \\sum_{i = 1}^n (ax_i + b - y_i)^2\\;.\\]\nBehind the scenes, math is powered by the MathJax engine. For more on how to write math, check this handy tutorial and quick reference."
   },
   {
+    "objectID": "posts/perceptron-blog-post/PerceptronBlog.html",
+    "href": "posts/perceptron-blog-post/PerceptronBlog.html",
+    "title": "Finn’s Perceptron Algorithm Blog Post",
+    "section": "",
+    "text": "More experimentation!\nLet’s create some non-linearly seperable synthetic data sets, just so we can prove my algorithm can frind the next closest line of seperability.\n\nimport numpy as np\nimport pandas as pd\nimport seaborn as sns\nfrom matplotlib import pyplot as plt\n\nfrom sklearn.datasets import make_blobs\n\nnp.random.seed(54321)\n\nn = 100\np_features = 3\n\nX, y = make_blobs(n_samples = 100, n_features = p_features - 1, centers = [(-0.5, -0.5), (0.5, 0.5)])\n\nfig = plt.scatter(X[:,0], X[:,1], c = y)\nxlab = plt.xlabel(\"Feature 1\")\nylab = plt.ylabel(\"Feature 2\")\n\n\n\n\nIn the above plot of clouds, the dots very clearly overlap, and finding a line to divide them completely won’t be possible. Instead, we can have the algorithm keep trying it’s best until the max_steps is reached:\n\np = perceptron.Perceptron()\np.fit(X, y, max_steps = 10000)\n\nI set the max_steps here to be a bit higher so the algorithm can have more time to do its best. Here is the same p instance of the class Perceptron, with the same instance variable w of weights:\n\np.w\n\narray([ 1.14190182,  1.59493071, -0.73332539])\n\n\nAnd putting everything together, we get a line that tries to seperate both dot blobs:\n\ndef draw_line(w, x_min, x_max):\n  x = np.linspace(x_min, x_max, 101)\n  y = -(w[0]*x + w[2])/w[1]\n  plt.plot(x, y, color = \"black\")\n\nfig = plt.scatter(X[:,0], X[:,1], c = y)\nfig = draw_line(p.w, -2, 2)\n\nxlab = plt.xlabel(\"Feature 1\")\nylab = plt.ylabel(\"Feature 2\")\n\n\n\n\nWe can do the same chack of the score:\n\np.score(X, y)\n\n0.62\n\n\nSo it looks like the score did not get to \\(1\\), and in the above graph you can see that there are a few yellow dots on the purple side and vice versa. Because of the random nature of how the vector w is initialized, some instances of running the algorithm will be better and some not so much.\nAgain we can also visualize the progress the algorithm made with the history graph:\n\nfig = plt.plot(p.history)\nxlab = plt.xlabel(\"Iteration\")\nylab = plt.ylabel(\"Accuracy\")\n\n\n\n\nIt looks like that having max_steps be higher really doesn’t help much, so let’s see what happens again with the same data with less iterations:\n\np = perceptron.Perceptron()\np.fit(X, y, max_steps = 1000)\n\n\ndef draw_line(w, x_min, x_max):\n  x = np.linspace(x_min, x_max, 101)\n  y = -(w[0]*x + w[2])/w[1]\n  plt.plot(x, y, color = \"black\")\n\nfig = plt.scatter(X[:,0], X[:,1], c = y)\nfig = draw_line(p.w, -2, 2)\n\nxlab = plt.xlabel(\"Feature 1\")\nylab = plt.ylabel(\"Feature 2\")\n\n\n\n\nAnd the score:\n\np.score(X, y)\n\n0.46\n\n\nAnd the history graph:\n\nfig = plt.plot(p.history)\nxlab = plt.xlabel(\"Iteration\")\nylab = plt.ylabel(\"Accuracy\")\n\n\n\n\nSo actually, it looks like the accuracy at times reached \\(0.6\\), depending on the final iteration and randomness from the index i within the number of observations, we can get a worse score."
+  },
+  {
     "objectID": "posts/example-blog-post/index.html",
     "href": "posts/example-blog-post/index.html",
     "title": "Hello Blog",
@@ -30,9 +37,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "My Awesome CSCI 0451 Blog",
+    "title": "Learning About Machine Learning",
     "section": "",
-    "text": "Finn’s first blog post for CSCI 0451.\n\n\n\n\n\n\nFeb 15, 2023\n\n\nFinn Ellingwood\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\nAn example blog post illustrating the key techniques you’ll need to demonstrate your learning in CSCI 0451.\n\n\n\n\n\n\nJan 10, 2023\n\n\nPhil Chodrow\n\n\n\n\n\n\nNo matching items"
+    "text": "Finn’s implementation of the perceptron algorithm.\n\n\n\n\n\n\nMar 14, 2023\n\n\nFinn Ellingwood\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\nFinn’s first blog post for CSCI 0451.\n\n\n\n\n\n\nFeb 15, 2023\n\n\nFinn Ellingwood\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\nAn example blog post illustrating the key techniques you’ll need to demonstrate your learning in CSCI 0451.\n\n\n\n\n\n\nJan 10, 2023\n\n\nPhil Chodrow\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
