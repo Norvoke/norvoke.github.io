@@ -1,0 +1,13 @@
+---
+title: "My Awesome CSCI 0451 Blog"
+listing:
+  contents: posts
+  sort: "date desc"
+  type: default
+  categories: true
+  sort-ui: false
+  filter-ui: false
+page-layout: full
+---
+
+ 

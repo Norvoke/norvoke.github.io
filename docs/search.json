@@ -18,7 +18,7 @@
     "href": "index.html",
     "title": "My Awesome CSCI 0451 Blog",
     "section": "",
-    "text": "An example blog post illustrating the key techniques you’ll need to demonstrate your learning in CSCI 0451.\n\n\n\n\n\n\nJan 10, 2023\n\n\nPhil Chodrow\n\n\n\n\n\n\nNo matching items"
+    "text": "Finn’s first blog post for CSCI 0451.\n\n\n\n\n\n\nFeb 15, 2023\n\n\nFinn Ellingwood\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\nAn example blog post illustrating the key techniques you’ll need to demonstrate your learning in CSCI 0451.\n\n\n\n\n\n\nJan 10, 2023\n\n\nPhil Chodrow\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
@@ -26,5 +26,19 @@
     "title": "About",
     "section": "",
     "text": "About this blog"
+  },
+  {
+    "objectID": "posts/post-2023-02-15/index.html",
+    "href": "posts/post-2023-02-15/index.html",
+    "title": "First Blog Post",
+    "section": "",
+    "text": "This is my first post to my official blog for CSCI 0451. I am testing out some things and will be working on implementing the perceptron algorithm in python to draw a line between two clouds of points."
+  },
+  {
+    "objectID": "posts/post-2023-02-15/index.html#math",
+    "href": "posts/post-2023-02-15/index.html#math",
+    "title": "First Blog Post",
+    "section": "Math",
+    "text": "Math\nIn addition to regular text using the Markdown specification, you can also write mathematics, enclosed between dollar signs. The syntax for writing math is very similar to the syntax used in the \\(\\LaTeX\\) markup language. For example, $f(x) \\approx y$ renders to \\(f(x) \\approx y\\). To place complex mathematical expressions on their own lines, use double dollar signs. For example, the expression\n$$\\mathcal{L}(a, b) = \\sum_{i = 1}^n (ax_i + b - y_i)^2$$\nrenders to:\n\\[\\mathcal{L}(a, b) = \\sum_{i = 1}^n (ax_i + b - y_i)^2\\;.\\]\nBehind the scenes, math is powered by the MathJax engine. For more on how to write math, check this handy tutorial and quick reference."
   }
 ]
