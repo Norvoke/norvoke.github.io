@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.189">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Finn Ellingwood">
+<meta name="dcterms.date" content="2023-04-19">
+<meta name="description" content="Finn’s quick look at Timnit Gebru’s views on the current situation of ethics in AI.">
+
+<title>Finn’s Awesome CSCI 0451 Blog!!! - Timnit Gebru and Modern Ethics in AI</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<style>
+    .quarto-title-block .quarto-title-banner {
+      color: black;
+background-image: url(../../img/snow.jpg);
+background-size: cover;
+    }
+    </style>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Finn’s Awesome CSCI 0451 Blog!!!</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">About</a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/Norvoke/norvoke.github.io"><i class="bi bi-github" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"><i class="bi bi-twitter" role="img">
+</i> 
+ </a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Timnit Gebru and Modern Ethics in AI</h1>
+                  <div>
+        <div class="description">
+          Finn’s quick look at Timnit Gebru’s views on the current situation of ethics in AI.
+        </div>
+      </div>
+                </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Finn Ellingwood </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">April 19, 2023</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="problems-with-ai-and-you" class="level1">
+<h1>Problems with AI and You:</h1>
+<section id="ai-superstar-timnit-gebru-on-ethics-in-ai-and-why-we-need-to-care" class="level3">
+<h3 class="anchored" data-anchor-id="ai-superstar-timnit-gebru-on-ethics-in-ai-and-why-we-need-to-care">AI Superstar Timnit Gebru on Ethics in AI and Why We Need to Care</h3>
+<p><img src="gebru.png" style="width:35%" title="Gebru in 2020" alt="Photo courtesy of Gebru"></p>
+<p>Introducing Dr.&nbsp;Timnit Gebru, the computer scientist extraordinaire! She’s like the Hermione Granger of the AI world, except she’s not fictional (and she’s probably better at coding).</p>
+<p>Dr.&nbsp;Gebru is a superstar when it comes to algorithmic bias and data mining. She’s the brains behind the Gender Shades study, which exposed the facial recognition software’s tendency to overlook black women (seriously, what’s up with that?). She’s also the co-founder of Black in AI, an organization that’s on a mission to get more black individuals involved in AI. You go, girl!</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>“technology is mostly being used to target the very people who are most vulnerable” Gebru in her 2020 talk <code>Computer vision in practice: who is benefiting and who is being harmed?</code></p>
+</div>
+</div>
+<p>Dr.&nbsp;Gebru is not just smart, she’s also sassy. She doesn’t shy away from speaking up about the ethical and social implications of AI. In fact, according to her Wikipedia page (which is known for its authentic journalism), she left her job at Google because they wanted her to take her unpublished paper and shove it where the sun don’t shine. (Just kidding, they just wanted her to remove some names. But still, it was a big deal.)</p>
+<p>Speaking of ethical concerns, let’s talk about ChatGPT. Middlebury College, like many other institutions, has yet to establish a campus-wide policy regarding the use of ChatGPT and other AI tools. This means that professors are free to use ChatGPT if they want to, which is kind of like giving your students a genie in a bottle (except instead of wishes, they get answers to their essays).</p>
+<p>However, ChatGPT comes with its own set of problems. For example, the premium version gives students who can afford it an unfair advantage. And let’s not forget that ChatGPT is trained on a whole lot of language data, which includes some pretty nasty stuff. Developers try to filter out the biased stuff, but it still seeps through. Just like that one drop of ketchup that always ends up on your white shirt.</p>
+<p>So what did Dr.&nbsp;Gebru have to say about all of this? Well, she talked about the reliability (or lack thereof) of computer vision technology. Turns out, those facial recognition tools aren’t as accurate as we thought. In fact, they’re pretty biased. And when they’re used to judge people’s personalities and emotions (yes, that’s a thing), it perpetuates structural racism. Oh, and don’t get her started on Faception, which singles out people from marginalized groups as terrorists. Not cool, Faception.</p>
+<p>Dr.&nbsp;Gebru also talked about the lack of diversity in datasets. It’s a big problem because it leads to a high disparity in facial recognition results. And even when companies do try to gather diverse information, they end up doing it unethically. It’s like they’re playing Pokemon, except instead of catching them all, they’re catching all the darker skin images and scraping images of transgender YouTubers without their consent.</p>
+<p>But here’s the thing: technology is not always used in the way it’s designed. Sometimes it leads to more discrimination and problems than efficiency. So Dr.&nbsp;Gebru suggested that we need to think beyond diversity in datasets and consider structural and real representation. We need to make sure that panels aren’t just filled with people from dominant groups and those closest to money. Because fairness isn’t just about math, it’s about society.</p>
+<p>So, what do you think, as some questions for the reader: Should we prohibit or regulate the use of facial recognition on people? And how can computer vision technology help marginalized communities? We’re all ears!</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

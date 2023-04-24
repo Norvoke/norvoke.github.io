@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/gebru-post/gebru.html",
       "/posts/penguins-blog-post/Penguins.html",
       "/posts/perceptron-blog-post/PerceptronBlog.html",
       "/posts/post-2023-02-15/index.html",
