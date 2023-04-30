@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "Computer Science as Explored by Finn Ellingwood"
+  title: "Machine Learning Explored by Finn Ellingwood"
   navbar:
     background: "#112a39"
     right:
