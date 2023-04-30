@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "Finn's Awesome CSCI 0451 Blog!!!"
+  title: "Computer Science as Explore by Finn Ellingwood"
   navbar:
     background: "#112a39"
     right:
