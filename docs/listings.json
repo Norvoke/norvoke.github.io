@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/project/project.html",
       "/posts/unsupervised/unsupervised.html",
       "/posts/gebru-post2/gebru2.html",
       "/posts/gebru-post/gebru.html",

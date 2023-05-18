@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.189">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Finn Ellingwood">
+<meta name="dcterms.date" content="2023-05-15">
+<meta name="description" content="This is Finn’s final project for the CS 451 Machine Learning class. It incorporates knowledge of the Russian langauge and much of what was taught in class to build an interactive language model to predict verb attributes for any given input Russian verb or infinitive.">
+
+<title>Machine Learning Explored by Finn Ellingwood - A Russian Verb Classification Model trained on the Russian Open Corpora dataset</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<style>
+    .quarto-title-block .quarto-title-banner {
+      color: black;
+background-image: url(../../img/snow.jpg);
+background-size: cover;
+    }
+    </style>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Machine Learning Explored by Finn Ellingwood</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">About</a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/Norvoke/norvoke.github.io"><i class="bi bi-github" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"><i class="bi bi-twitter" role="img">
+</i> 
+ </a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">A Russian Verb Classification Model trained on the Russian Open Corpora dataset</h1>
+                  <div>
+        <div class="description">
+          This is Finn’s final project for the CS 451 Machine Learning class. It incorporates knowledge of the Russian langauge and much of what was taught in class to build an interactive language model to predict verb attributes for any given input Russian verb or infinitive.
+        </div>
+      </div>
+                </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Finn Ellingwood </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">May 15, 2023</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="abstract" class="level1">
+<h1>Abstract</h1>
+<p><img src="verbs.png" style="width:400pt"></p>
+<p>This project aimed to develop a Russian Verb Classification Model capable of accurately predicting attributes such as tense, person, mood, etc., when given a Russian verb or infinitive. By utilizing the Random Forest Classifier model and leveraging the data from the Open Corpora dataset, my goal was to achieve a high level of accuracy that could rival traditional dictionaries. Through meticulous implementation and evaluation, I successfully produced a model that delivers a list of likely attributes with precision comparable to dictionaries, empowering users with fast and reliable verb attribute predictions.</p>
+</section>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>Looking across the internet, I searched to see if anyone has done what I sought out to do using machine learning, but had not such luck. Mentioned here are papers closely related to my project and interest in the field of natural language processing (NLP), and in linguistic analysis in general, but they do not directly address my goal of developing a Russian Verb Classification Model. Let’s briefly explain each paper’s relevance and how they relate to my goal:</p>
+<blockquote class="blockquote">
+<p><span class="citation" data-cites="artemova2020deep">Artemova (<a href="#ref-artemova2020deep" role="doc-biblioref">2020</a>)</span> “Deep Learning for the Russian Language” by Ekaterina Artemova: This paper discusses deep learning applications in processing the Russian language. While it provides insights into the challenges and techniques of deep learning in NLP, it does not specifically focus on verb classification or address my goal.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><span class="citation" data-cites="kutuzov2017rusvec">Kutuzov A. (<a href="#ref-kutuzov2017rusvec" role="doc-biblioref">2017</a>)</span> “RusVectōrēs: A Toolkit for Building Web Interfaces for Vector Semantic Models” by Kutuzov A., Kuzmenko E.: This paper presents a toolkit called RusVectōrēs, which computes semantic relations between words in Russian and provides pre-trained distributional semantic models. While this resource can be useful for analyzing the semantics of Russian words, it does not directly relate to verb classification or my project’s objective.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><span class="citation" data-cites="sboev2016machine">Aleksandr Sboev (<a href="#ref-sboev2016machine" role="doc-biblioref">2016</a>)</span> “Machine Learning Models of Text Categorization by Author Gender Using Topic-independent Features” by Aleksandr Sboev et al.: This paper focuses on the problem of text categorization based on the author’s gender using clues like word endings and context. Although it deals with machine learning techniques applied to Russian-language texts, it does not address verb classification or align with my specific goal.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><span class="citation" data-cites="olga2015inducing">Olga Lyashevskaya (<a href="#ref-olga2015inducing" role="doc-biblioref">2015</a>)</span> “Inducing Verb Classes from Frames in Russian: Morpho‑Syntax and Semantic Roles”: This paper presents clustering experiments on Russian verbs using data from the Russian FrameBank. It explores the hypothesis of grouping verbs into semantic classes based on lexical and syntactic distributional profiles. While it pertains to verb classification in Russian, it does not directly align with my project’s objective of predicting attributes such as tense, person, and mood.</p>
+</blockquote>
+<p>In summary, while these papers and many like them discuss various aspects of NLP and linguistic analysis in the Russian language, none of them specifically address or accomplish my goal of developing a Russian Verb Classification Model.</p>
+<p>So with that, I will start to explore methods to reach my goal of verb classification. All of the files I will discuss here can be found on my github repository for this project located here: <br>https://github.com/Norvoke/CSCI0451Project</p>
+<p>There you can find a pretrained model to download and mess around with using the command-line. You will need the following libraries for it to run:<br> <code>urllib, joblib, numpy, pandas, and sklearn.</code></p>
+</section>
+<section id="values-statement" class="level1">
+<h1>Values Statement</h1>
+<p>The potential users of my project are individuals who seek accurate and efficient predictions of verb attributes in the Russian language. These users could include language learners, translators, linguists, and anyone who deals with Russian verb analysis. Additionally, researchers and developers in the field of natural language processing and computational linguistics may find value in the techniques and methodologies employed in this project.</p>
+<p>The technology that solves the problem of accurate verb attribute prediction in Russian benefits the users by providing them with fast and reliable information, empowering them to perform tasks more efficiently and accurately. This technology enhances their understanding and usage of the Russian language, saving time and effort in manual analysis.</p>
+<p>While the technology itself does not have inherent harmful effects, its potential impact may depend on how it is implemented and used. There is a possibility that overreliance on automated tools could lead to a decline in manual linguistic analysis skills or the perpetuation of biases present in the training data. Therefore, it is crucial to ensure ethical considerations and a balanced approach in the development and use of the technology.</p>
+<p>The implementation of this technology, when combined with responsible practices and continuous improvement, has the potential to contribute to a more equitable, just, and sustainable world. By providing accessible and accurate information to users, it can bridge language barriers and promote effective communication. However, it is important to recognize that technology alone cannot solely address systemic issues, can uphold inherent biases, and cannot guarantee societal progress. In the end, my goal to to explore these methods using my knowledge of machine learning, familiarity with linguistic concepts, and with grammar structures present in the Russian language.</p>
+</section>
+<section id="materials-and-methods" class="level1">
+<h1>Materials and Methods</h1>
+<section id="the-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-data">The Data:</h2>
+<blockquote class="blockquote">
+<img src="opencorp.png" style="width:550pt">
+<figcaption style="padding: 2px">
+The homepage for the Russian OpenCorpora project translated (using Google translate) into English.
+<figure class="figure">
+<p>
+</p></figure></figcaption></blockquote>
+<p>The OpenCorpora dataset is a valuable resource for linguistic analysis of the Russian language. It was collected and encoded by Rachael Tatman, and the dataset consists of two files: the corpus and the dictionary. The corpus is provided in .json format, while the dictionary is in plain text. The dataset is encoded in UTF-8, ensuring compatibility with various systems and applications.</p>
+<p>The example snippet from the dataset demonstrates the format of the corpus. Each row represents a word or verb form along with its associated tags, providing information about the word’s part of speech, animacy, gender, number, case, aspect, person, tense, and mood. For nouns, the tags include information about animacy, gender, number, and case. For verbs, the tags include details about aspect, person, tense, and mood.</p>
+<section id="example-entries" class="level3">
+<h3 class="anchored" data-anchor-id="example-entries">Example entries:</h3>
+<p>1: <br> <code>ЁЖ    NOUN,anim,masc sing,nomn</code> <br> <code>ЕЖА    NOUN,anim,masc sing,gent</code> <br> <code>ЕЖУ    NOUN,anim,masc sing,datv</code> <br> <code>ЕЖА    NOUN,anim,masc sing,accs</code> <br> <code>ЕЖОМ    NOUN,anim,masc sing,ablt</code> <br> <code>ЕЖЕ    NOUN,anim,masc sing,loct</code> <br> <code>ЕЖИ    NOUN,anim,masc plur,nomn</code> <br> <code>ЕЖЕЙ    NOUN,anim,masc plur,gent</code> <br> <code>ЕЖАМ    NOUN,anim,masc plur,datv</code> <br> … <br> 41: <br> <code>ЁРНИЧАЮ    VERB,impf,intr sing,1per,pres,indc</code> <br> <code>ЁРНИЧАЕМ    VERB,impf,intr plur,1per,pres,indc</code> <br> <code>ЁРНИЧАЕШЬ    VERB,impf,intr sing,2per,pres,indc</code> <br> <code>ЁРНИЧАЕТЕ    VERB,impf,intr plur,2per,pres,indc</code> <br> <code>ЁРНИЧАЕТ    VERB,impf,intr sing,3per,pres,indc</code> <br> <code>ЁРНИЧАЮТ    VERB,impf,intr plur,3per,pres,indc</code> <br> <code>ЁРНИЧАЛ    VERB,impf,intr masc,sing,past,indc</code> <br> <code>ЁРНИЧАЛА    VERB,impf,intr femn,sing,past,indc</code> <br> <code>ЁРНИЧАЛО    VERB,impf,intr neut,sing,past,indc</code> <br> <code>ЁРНИЧАЛИ    VERB,impf,intr plur,past,indc</code> <br> <code>ЁРНИЧАЙ    VERB,impf,intr sing,impr,excl</code> <br> <code>ЁРНИЧАЙТЕ    VERB,impf,intr plur,impr,excl</code> <br>…</p>
+<p>It is important to note some potential limitations of the OpenCorpora dataset. The dataset primarily focuses on Russian nouns and verbs, with limited coverage of other parts of speech. While it provides a significant amount of linguistic data with 1.5 million words, it may not represent the entirety of the Russian language. Additionally, the dataset’s representation of linguistic phenomena, such as dialectal variations or specific domains, may be limited.</p>
+<p>Furthermore, the OpenCorpora dataset represents written Russian language usage, which may differ from spoken language or informal registers. The dataset may not capture the full range of variation and contextual nuances present in the language. The dataset is also subject to the bias of its sources, which range from across the internet to various publications and print media, which are not listed in full on their documentation. It is necesary to understand these sources are subject to the regional restrictions on freedom of print and other contributing factors which may alter the way written language differs from the de facto. It is essential to consider these limitations when utilizing the dataset for linguistic analysis or developing models based on its contents.</p>
+</section>
+</section>
+<section id="my-approach" class="level2">
+<h2 class="anchored" data-anchor-id="my-approach">My Approach:</h2>
+<p>Initially I needed to pull only the verbs and infinitives from the dataset, so I wrote a short program to parse the text file and read the data into a pandas data frame. It just looked at the first attribute in the text line whether it was ‘INFN’ or ‘VERB’.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Read dictionary.txt file</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'dictionary.txt'</span>, <span class="st">'r'</span>, encoding<span class="op">=</span><span class="st">'utf-8'</span>) <span class="im">as</span> f:</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> f.readlines()</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract rows with "VERB" or "INFN"</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>verb_inf_data <span class="op">=</span> []</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, row <span class="kw">in</span> <span class="bu">enumerate</span>(data):</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">"VERB"</span> <span class="kw">in</span> row <span class="kw">or</span> <span class="st">"INFN"</span> <span class="kw">in</span> row:</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        verb_inf_data.append(row.strip().split(<span class="st">"</span><span class="ch">\t</span><span class="st">"</span>))</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Create pandas dataframe</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(verb_inf_data[<span class="dv">1</span>:], columns<span class="op">=</span>[<span class="st">"verb"</span>, <span class="st">"attributes"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Which produced a data frame like this:</p>
+<p><code>x  verb    attributes</code> <br> <code>0  ЁЖИМ    VERB,impf,tran plur,1per,pres,indc</code><br> <code>1  ЁЖИШЬ   VERB,impf,tran sing,2per,pres,indc</code><br> <code>2  ЁЖИТЕ   VERB,impf,tran plur,2per,pres,indc</code><br> <code>3  ЁЖИТ    VERB,impf,tran sing,3per,pres,indc</code><br> <code>4  ЁЖАТ    VERB,impf,tran plur,3per,pres,indc</code><br> <code>...    ... ...</code><br> <code>451441 ВЛОЖАТСЯ    VERB,perf,intr plur,3per,futr,indc</code><br> <code>451442 ВЛОЖИМСЯ    VERB,perf,intr sing,impr,incl</code><br> <code>451443 ВЛОЖИМТЕСЬ  VERB,perf,intr plur,impr,incl</code><br> <code>451444 ВЛОЖИСЬ VERB,perf,intr sing,impr,excl</code><br> <code>451445 ВЛОЖИТЕСЬ   VERB,perf,intr plur,impr,excl</code><br> <code>451446 rows × 2 columns</code><br></p>
+<p>Then I needed to break up the data frame into parts, where the verb would go first after an entry number, followed by the list of attributes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add leading numbers to each entry</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df.index <span class="op">=</span> df.index <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df.index.name <span class="op">=</span> <span class="st">'Number'</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>split_data <span class="op">=</span> []</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, row <span class="kw">in</span> verb_inf_data:</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    split_data.append((row.strip().split(<span class="st">","</span>)))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'Entry'</span>: verb_inf_data[<span class="dv">1</span>:]})</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>verb_frame <span class="op">=</span> pd.DataFrame({<span class="st">'verb'</span>: <span class="bu">list</span>(<span class="bu">list</span>(<span class="bu">zip</span>(<span class="op">*</span>verb_inf_data))[<span class="dv">0</span>])})</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>verb_frame.insert(<span class="dv">1</span>, <span class="st">"attributes"</span>, split_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is where my data parsing would produce some issues down the line in my training section, as to the computer, the attributes entries, while seperated by comma, were still treated as whole parts instead of individial attributes.</p>
+<p>Initially I tried KMeans clustering, as in my brain, I had an idea that there were many groups of verbs, like all those which are plural or all those that are first person, and that the model could pull these out. I also perfomed the vectorization step here with the dividing of the data into valadation and test portions:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> CountVectorizer</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> silhouette_score</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the DataFrame from your source</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> df.head(<span class="dv">2000</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Split the data into input features (verbs) and target labels (attributes)</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> data[<span class="st">'verb'</span>]</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> data[<span class="st">'attributes'</span>]</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Vectorize input features using CountVectorizer</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>vectorizer <span class="op">=</span> CountVectorizer()</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> vectorizer.fit_transform(X)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="va">self</span>._vectorizer <span class="op">=</span> vectorizer</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>KMeans(n_clusters<span class="op">=</span><span class="dv">20</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate the clustering using silhouette score</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> model.predict(X)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>score <span class="op">=</span> silhouette_score(X, labels)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Silhouette score: </span><span class="sc">{</span>score<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Silhouette score: 0.02340348182286992</p>
+<p>A reminder that the silhuette score reflects how defined the borders of clusters are, and even with taking a smaller portion of the data to spead of teasting and getting the highest score possible with a number of clusters around 20, the silhuette score was still far to low to be usable, not even approaching 0.5.</p>
+<p>So I tried some more data manipulation and reasearched to find a better algorithm to use. I ended up settling on the random forest classifier approach, and modified the way my data was stored to optimize its use with the RandomForestClassifier. I did this by seperating each verb attribute into a separate column in a new data frame, with the number of columns corresponding with the maximum number of attributes. I also shuffled thr rows from its original alphabetized form to rid the bias that might result from that and took the a random 40 thousand entries as my computer ended up running out of memory somewhere along the way when I used more of the data. This should still provide more than sufficient training data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gathering just an even 40k of the ~41k rows to make dealing with them a bit easier</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.sample(frac <span class="op">=</span> <span class="dv">1</span>).head(<span class="dv">40000</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Split attributes column into separate columns</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>df_attributes <span class="op">=</span> df[<span class="st">'attributes'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: pd.Series(x.split(<span class="st">','</span>)))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>df_attributes.columns <span class="op">=</span> [<span class="st">'attribute</span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(df_attributes.columns) <span class="op">+</span> <span class="dv">1</span>)]</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge verb column with split attributes columns</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.concat([df[<span class="st">'verb'</span>], df_attributes], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Fill NaN values with empty strings</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>df.fillna(value<span class="op">=</span><span class="st">''</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Create parallel data frame with separate columns for each attribute</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>parallel_df <span class="op">=</span> pd.DataFrame()</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> column <span class="kw">in</span> df_attributes.columns:</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    attribute_values <span class="op">=</span> df_attributes[column].unique()</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> value <span class="kw">in</span> attribute_values:</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        parallel_df[<span class="ss">f'</span><span class="sc">{</span>column<span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>value<span class="sc">}</span><span class="ss">'</span>] <span class="op">=</span> df[<span class="st">'verb'</span>].where(df[column] <span class="op">==</span> value, <span class="st">''</span>)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the verb and attribute columns from the dataframe</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>verbs <span class="op">=</span> df[<span class="st">'verb'</span>]</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>attributes <span class="op">=</span> df.iloc[:, <span class="dv">1</span>:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This resulted in the following data frame:</p>
+<p><code>verb  attribute1  attribute2  attribute3  attribute4  attribute5  attribute6  attribute7</code><br> <code>305100 ПОШМЫГАЙТЕ  VERB    perf    intr plur   impr    excl</code><br> <code>304563 ПОЧУДЯТСЯ   VERB    perf    intr plur   3per    futr    indc</code><br> <code>297352 ПОСКРИПЫВАТЬ    INFN    impf    intr</code><br> <code>277886 ПОДСУШИВАЕТЕСЬ  VERB    impf    intr plur   2per    pres    indc</code><br> <code>67659  ДОСПЕЮТ VERB    perf    intr plur   3per    futr    indc</code><br> … … … … … … … … …<br> <code>82775  ЗАКАЛЫВАЕШЬСЯ   VERB    impf    intr sing   2per    pres    indc</code><br> <code>148750 НАДМАЧИВАЮТСЯ   VERB    impf    intr plur   3per    pres    indc</code><br> <code>90144  ЗАНАВЕШИВАЕТ    VERB    impf    tran sing   3per    pres    indc</code><br> <code>279045 ПОДТОЧАТ    VERB    perf    tran plur   3per    futr    indc</code><br> <code>380842 РЯВКНУЛО    VERB    perf    intr neut   sing    past    indc</code><br> 40000 rows × 8 columns</p>
+<p>I then vectorized it from this form and prepared the forest classifier:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mlb <span class="op">=</span> MultiLabelBinarizer()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>attribute_features <span class="op">=</span> mlb.fit_transform(attributes.values)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>attribute_columns <span class="op">=</span> mlb.classes_</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(verbs, attribute_features, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>vectorizer <span class="op">=</span> CountVectorizer(analyzer<span class="op">=</span><span class="st">'char'</span>, ngram_range<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">3</span>))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>X_train_vectorized <span class="op">=</span> vectorizer.fit_transform(X_train)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>X_test_vectorized <span class="op">=</span> vectorizer.transform(X_test)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> RandomForestClassifier(max_depth<span class="op">=</span><span class="va">None</span>, random_state<span class="op">=</span><span class="dv">0</span>, n_jobs<span class="op">=-</span><span class="dv">1</span>, class_weight<span class="op">=</span><span class="st">"balanced_subsample"</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>model.fit(X_train_vectorized, y_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I quickly wanted to visualize the data again now that I had seperated the attributes. I used matplotlib to make the following bar graph showing the frequency on the most common attributes. It had some issued like plotting the “intr Erro,” but you can see that the INFN and VERB columns, if stacked would equal 40,000, which goes along with our data set size, this also applies to the ‘impf’ and ‘perf’ attributes, which in Russian corresponds to imperfective and perfective verbs, which a verb can be one or the other, not neither nor both:</p>
+<p><img src="attributes.png" style="width:500pt"></p>
+<p>I also tried to put together a word cloud of the attributes, though my graphing method may be flawed. It required me to drop all the empty attribute columns, which I did for the earlier visualization. But it also had me concatenate all of the verb attributes so I had uniform columns. The visualization still helps in seeing the frequency which corresponds to the size of the attributes below, which shows the biggest group fits into either ‘VERB impf’ or ‘VERB perf’:</p>
+<p><img src="cloud.png" style="width:600pt"></p>
+<p>With a better understanding of out data and our model already initialized, the reasons for choosing the RandomForestClassifier method are more clear, but I can outline them here:</p>
+<ol type="1">
+<li><p>Non-linearity: RandomForestClassifier is a non-linear model that can capture complex relationships between input features (verbs) and output classes (attributes). Verbs can have various patterns and combinations of attributes, and a non-linear model like RandomForestClassifier can capture these intricate patterns better than linear models.</p></li>
+<li><p>Robust to irrelevant features: RandomForestClassifier can handle a large number of input features (verbs) without requiring feature selection or dimensionality reduction techniques. It automatically selects relevant features and assigns them appropriate importance during the training process. This is advantageous when dealing with a potentially large vocabulary of verbs (which I would say we have).</p></li>
+<li><p>Handling categorical data: RandomForestClassifier naturally handles categorical data, making it suitable for classifying verbs based on categorical attributes like tense and person. It can learn the decision boundaries and relationships between different attribute values, allowing it to make accurate predictions.</p></li>
+</ol>
+<p>With that, let’s train!</p>
+</section>
+</section>
+<section id="results" class="level1">
+<h1>Results</h1>
+<p>Here I started the training model and had it print the final results of all the training steps:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> model.predict(X_test_vectorized)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(y_test, y_pred))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>            precision    recall  f1-score   support
+
+       0       1.00      1.00      1.00      8000
+       1       0.85      0.64      0.73      1166
+       2       0.96      0.83      0.89      1193
+       3       0.99      0.73      0.84      1127
+       4       0.00      0.00      0.00         0
+       5       0.00      0.00      0.00         1
+       6       0.00      0.00      0.00         0
+       7       0.00      0.00      0.00         0
+       8       0.00      0.00      0.00         0
+       9       0.00      0.00      0.00         2
+      10       0.00      0.00      0.00         3
+      11       0.00      0.00      0.00         2
+      12       0.00      0.00      0.00         0
+      13       0.99      0.98      0.99       571
+      14       0.00      0.00      0.00         3
+      15       0.00      0.00      0.00         2
+      16       0.00      0.00      0.00         4
+      17       0.00      0.00      0.00         0
+      18       0.92      0.24      0.38        46
+      19       0.00      0.00      0.00         0
+      20       0.00      0.00      0.00         1
+      21       0.00      0.00      0.00         0
+      22       0.00      0.00      0.00         4
+      23       0.00      0.00      0.00         1
+      24       0.00      0.00      0.00         0
+      25       0.00      0.00      0.00         0
+      26       0.00      0.00      0.00         0
+      27       0.00      0.00      0.00         2
+      28       1.00      1.00      1.00      7429
+      29       0.92      0.74      0.82      1111
+      30       0.77      0.39      0.52      1717
+      31       0.82      0.83      0.82      3829
+      32       0.88      0.69      0.77      1635
+      33       0.85      0.49      0.63       524
+      34       0.92      0.97      0.94      5794
+      35       0.98      0.75      0.85       322
+      36       0.00      0.00      0.00         0
+      37       0.98      0.74      0.85       303
+      38       0.99      0.65      0.78       294
+      39       0.98      0.76      0.86       292
+      40       0.95      0.71      0.81      1590
+      41       0.96      0.65      0.77      1263
+      42       0.99      0.96      0.98      2303
+      43       0.85      0.82      0.83      4171
+      44       0.84      0.75      0.79      1774
+      45       0.98      0.90      0.94      1735
+      46       0.87      0.82      0.85       268
+      47       0.00      0.00      0.00         0
+      48       0.89      0.55      0.68       277
+      49       0.81      0.12      0.21       277
+      50       0.91      0.55      0.68       289
+      51       0.84      0.55      0.67      1580
+      52       0.81      0.56      0.67      1245</code></pre>
+<p><code>micro avg       0.93      0.84      0.88     52150</code> <br> <code>macro avg       0.50      0.38      0.43     52150</code> <br> <code>weighted avg       0.92      0.84      0.87     52150</code> <br> <code>samples avg       0.93      0.84      0.88     52150</code> <br></p>
+<p>Thses final lines are important, as they show the actual accuracy of my model in terms of the split data testing validation. The <code>micro avg</code> takes into account how many samples there are per category, which is not uniform in this data as the number of attributes do not match across all verbs, so take this number with a grain of salt. The <code>macro avg</code> is also a bit hard to interperet as the classes are not uniform again.</p>
+<p>But we can see the results of the RandomForestClassifier, which can be interpreted based on the metrics provided in the output. Here’s a basic breakdown of the metrics and their implications:</p>
+<section id="micro-average" class="level3">
+<h3 class="anchored" data-anchor-id="micro-average">Micro Average:</h3>
+<blockquote class="blockquote">
+<p>Precision <code>(0.93)</code>: This represents the proportion of true positive predictions out of all the positive predictions made across all classes. In this case, the micro-average precision is 0.93, indicating that 93% of the positive predictions made by the model are correct. Recall <code>(0.84)</code>: This represents the proportion of true positive predictions out of all the actual positive instances across all classes. A micro-average recall of 0.84 means that the model is able to correctly identify 84% of the positive instances. F1-Score <code>(0.88</code>): The F1-score is the harmonic mean of precision and recall. It provides a balanced measure of the model’s accuracy. A micro-average F1-score of 0.88 indicates a good overall performance of the model in terms of both precision and recall.</p>
+</blockquote>
+</section>
+<section id="macro-average" class="level3">
+<h3 class="anchored" data-anchor-id="macro-average">Macro Average:</h3>
+<blockquote class="blockquote">
+<p>Precision <code>(0.50)</code>: The macro-average precision is the average precision across all classes. A value of 0.50 suggests that the model’s precision varies widely across different classes, with some classes performing well and others poorly (this makes sense with our variety of number of attributes to each verb entry). Recall <code>(0.38)</code>: The macro-average recall is the average recall across all classes. Similarly, a value of 0.38 indicates that the model’s recall varies significantly across classes. F1-Score <code>(0.43)</code>: The macro-average F1-score is the average F1-score across all classes. With a value of 0.43, it suggests an overall moderate performance of the model in terms of precision and recall across all classes.</p>
+</blockquote>
+</section>
+<section id="weighted-average" class="level3">
+<h3 class="anchored" data-anchor-id="weighted-average">Weighted Average:</h3>
+<blockquote class="blockquote">
+<p>Precision <code>(0.92)</code>: The weighted-average precision considers the number of samples in each class. It provides an overall precision measure while accounting for class imbalances. A value of 0.92 indicates a high precision for the model. Recall <code>(0.84)</code>: The weighted-average recall is similar to the weighted-average precision but considers recall instead. It also accounts for class imbalances. A value of 0.84 suggests a reasonable recall rate for the model. F1-Score <code>(0.87)</code>: The weighted-average F1-score considers both precision and recall while accounting for class imbalances. A value of 0.87 indicates a good overall balance between precision and recall.</p>
+</blockquote>
+</section>
+<section id="samples-average" class="level3">
+<h3 class="anchored" data-anchor-id="samples-average">Samples Average:</h3>
+<blockquote class="blockquote">
+<p>Precision <code>(0.93)</code>: The samples-average precision is similar to micro-average precision, but it treats each sample (instance) as an individual observation rather than aggregating by class. A value of 0.93 suggests that, on average, the model has a high precision for individual predictions. Recall <code>(0.84)</code>: The samples-average recall is similar to micro-average recall, treating each sample as an individual observation. It indicates that, on average, the model is able to correctly identify 84% of the positive instances in the dataset. F1-Score <code>(0.88)</code>: The samples-average F1-score is the harmonic mean of samples-average precision and samples-average recall. It provides an overall measure of the model’s accuracy on an individual sample level.</p>
+</blockquote>
+<p>Overall, the RandomForestClassifier model seems to perform well in terms of precision, recall, and F1-score when considering the micro-average and weighted-average metrics. However, the macro-average metrics suggest that the model’s performance varies significantly across different classes. It’s important to investigate further to identify which specific classes or attributes may have lower performance and may require further improvement.</p>
+<p>Next comes my favorite part of actually testing verbs to see what our model believes would be their attributes. I wrote a wuick function which intakes the verb and returns the predicted attributes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> predict_attributes(verb):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    verb_vectorized <span class="op">=</span> vectorizer.transform([verb])</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    predicted_attributes <span class="op">=</span> model.predict(verb_vectorized)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> mlb.inverse_transform(predicted_attributes)[<span class="dv">0</span>]</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>input_verb <span class="op">=</span> [<span class="bu">str</span>(<span class="bu">input</span>(<span class="st">"Enter a verb: "</span>))]</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>predict_attributes(<span class="bu">str</span>(input_verb))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I needed some verbs to test, so I went to Cooljugator, a tool used in my Russian class to learn verb conjugation, to look at the most common verbs.</p>
+<p><img src="cooljugator.png" style="width:600pt"></p>
+<p>It a less scientific test, more interesting to me as a learner of Russian, I picked the last five verbs from the list and put in their infinintives and got the following:</p>
+<pre><code>Enter a verb:  Покупать
+('', 'INFN', 'impf', 'tran')
+
+Enter a verb:  Начинать
+('', 'INFN', 'impf', 'tran')
+
+Enter a verb:  Мыть
+('', 'INFN', 'impf')
+
+Enter a verb:  Слушать
+('', 'INFN', 'impf', 'tran')
+
+Enter a verb:  Спрашивать
+('', 'INFN', 'impf', 'tran')</code></pre>
+<p>It corroectly identifies all of the infinitives with the correct ‘INFN’ attribute, as well as confirming that all these verbs are imperfective with the ‘impf’ tag. These where all transitive verbs, and it got the ‘tran’ tag correct for 4/5 verbs. Now let’s try with some conjugated verbs:</p>
+<pre><code>Enter a verb:  спрашиваю
+('', '1per', 'VERB', 'impf', 'indc', 'pres', 'tran sing')
+
+Enter a verb:  слушаем
+('', '1per', 'VERB', 'impf', 'indc', 'pres', 'tran plur')
+
+Enter a verb:  моют
+('', '3per', 'VERB', 'impf', 'indc', 'pres')
+
+Enter a verb:  начинаете
+('', '2per', 'VERB', 'impf', 'indc', 'pres', 'tran plur')
+
+Enter a verb:  покупает
+('', '3per', 'VERB', 'futr', 'indc', 'perf', 'tran sing')</code></pre>
+<p>I copied the following from the very same Cooljugator tool where I got the verbs so we can compare with the above results (I highlighted the selected verbs):</p>
+<p><img src="conjugated.png" style="width:900pt"></p>
+<p>For this example, let’s ignore the ‘tran’ part of the ‘tran plur/sing’ as it is a bit beyond the scope of the explanation needed here.</p>
+<p>We can see for the first example “спрашиваю,” it correctly identifies that it is first person and singular, meaning “I ask.” The next example, “слушаем” is correctly identifies it as first person plural. In fact, it identifies the person correctly for all of these examples, it only messes up where it did in the earlier example, on “моют.” This shows the model correctly groups the conjugated and infinitive forms of the verb with the same attributes, but it also means if it incorrectly identifies or fails to identify attributes, this can carry over to the other forms of the verb. One possible fix to this could be to gorup all variants of the same verb seperately, at the cost of storage and efficiency.</p>
+</section>
+</section>
+<section id="concluding-discussion" class="level1">
+<h1>Concluding Discussion</h1>
+<p>In conclusion, my machine learning model, trained on the Open Corpora Russian word list, demonstrates a remarkable ability to accurately identify verb attributes. Its high accuracy can be attributed to the comprehensive and diverse training data provided by the Open Corpora Russian word list, enabling the model to learn the intricate patterns and nuances of verb attributes in the Russian language.</p>
+<p>To further enhance the performance of my model in the future, I could consider incorporating additional linguistic features such as syntactic structures, semantic relations, or contextual information. These elements can provide valuable insights and help the model capture the broader context in which verbs and their attributes occur.</p>
+<p>Furthermore, expanding the training data to include a wider range of text genres, domains, and linguistic variations would likely improve the model’s generalization capabilities. This would ensure that the model can handle various real-world scenarios and adapt to different writing styles or domains.</p>
+<p>This lies more outside of the scope of my initial plans for my model, but I look forward to exploring this in the future.</p>
+<p>I believe I met my goals of the project. I had some plans to compare with non-machine-trained models, like that of two previous students’ work who made a model doing something very similar with Arabic verbs, but adapting it to work with Russian would have been a whole project on its own.</p>
+<p>I also would have liked to make the model more interactive and usable from a language learner’s perspective, as this was my goal to make a tool useful for learning and analyzing Russian verb structure. Unfortunately, my skills when it comes to making a web app and the resources I would need to host my model are just not there to make it happen yet. I again look forward to exploring this in the future, but for now the tool will only be interactive through the command-line.</p>
+</section>
+<section id="contributions-statement" class="level1">
+<h1>Contributions Statement</h1>
+<p>All of the code seen here was written by myself, with a lot of help from class work in my CS451 Machine Learning class, taught by the amazing <a href="https://www.philchodrow.prof/">Professor Chodrow</a>. I also thank the folks who made SciKit Learn for their amazing documentation, especially for the RandomForestClassifier examples provided <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">here</a>.</p>
+</section>
+<section id="personal-reflection" class="level1">
+<h1>Personal Reflection</h1>
+<p>In retrospect, my CS 451 Machine Learning project was centered around the development of a model capable of identifying attributes for Russian verbs. With a somewhat surprising level of accuracy, the model successfully assigned attributes to various input verbs, presenting a promising outcome.</p>
+<p>Throughout the project, the model proved itself to be a reliable companion, exhibiting an aptitude for understanding the intricate relationships between verbs and their associated attributes. Its ability to decipher the nuanced patterns of the Russian language offered a glimmer of hope for those seeking an automated solution to this particular linguistic challenge.</p>
+<p>While the project may not have produced rib-tickling anecdotes or unexpected twists, it nonetheless showcased the efficacy of machine learning algorithms in tackling linguistic tasks. The model’s consistent performance allowed for a dry but gratifying sense of accomplishment, affirming the value of meticulous training and careful feature selection.</p>
+<p>As I reflect upon this project, the humor lies in the unassuming nature of the outcome. There were no extravagant claims or over-the-top flamboyance; just a methodical exploration of data and algorithms resulting in a tool that quietly achieved its intended purpose. In the world of machine learning, even modest successes deserve recognition, and this project served as a reminder of the incremental progress we can make in unraveling the complexities of language.</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-sboev2016machine" class="csl-entry" role="doc-biblioentry">
+Aleksandr Sboev, Dmitry Gudovskikh, Tatiana Litvinova. 2016. <span>“Machine Learning Models of Text Categorization by Author Gender Using Topic-Independent Features.”</span> <em>Procedia Computer Science</em>.
+</div>
+<div id="ref-artemova2020deep" class="csl-entry" role="doc-biblioentry">
+Artemova, Ekaterina. 2020. <span>“Deep Learning for the Russian Language.”</span> <em>The Palgrave Handbook of Digital Russia Studies</em>, 465–81.
+</div>
+<div id="ref-kutuzov2017rusvec" class="csl-entry" role="doc-biblioentry">
+Kutuzov A., Kuzmenko E. 2017. <span>“WebVectors: A Toolkit for Building Web Interfaces for Vector Semantic Models.”</span> <em>Communications in Computer and Information Science</em>, 156–61.
+</div>
+<div id="ref-olga2015inducing" class="csl-entry" role="doc-biblioentry">
+Olga Lyashevskaya, Egor Kashkin. 2015. <span>“Inducing Verb Classes from Frames in Russian: Morpho‑syntax and Semantic Roles.”</span>
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
