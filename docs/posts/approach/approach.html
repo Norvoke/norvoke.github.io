@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.189">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Finn Ellingwood">
+<meta name="dcterms.date" content="2023-05-19">
+<meta name="description" content="Finn’s response and exploration of the ideas proposed by Arvind Narayanan surrounding fairness and bias.">
+
+<title>Machine Learning Explored by Finn Ellingwood - On the Limits of the Quantitative Approach to Bias and Fairness</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<style>
+    .quarto-title-block .quarto-title-banner {
+      color: black;
+background-image: url(../../img/snow.jpg);
+background-size: cover;
+    }
+    </style>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Machine Learning Explored by Finn Ellingwood</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">About</a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/Norvoke/norvoke.github.io"><i class="bi bi-github" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"><i class="bi bi-twitter" role="img">
+</i> 
+ </a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">On the Limits of the Quantitative Approach to Bias and Fairness</h1>
+                  <div>
+        <div class="description">
+          Finn’s response and exploration of the ideas proposed by Arvind Narayanan surrounding fairness and bias.
+        </div>
+      </div>
+                </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Finn Ellingwood </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">May 19, 2023</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="currently-quantitative-methods-are-primarily-used-to-justify-the-status-quo.-i-would-argue-that-they-do-more-harm-than-good." class="level3">
+<h3 class="anchored" data-anchor-id="currently-quantitative-methods-are-primarily-used-to-justify-the-status-quo.-i-would-argue-that-they-do-more-harm-than-good.">“…currently quantitative methods are primarily used to justify the status quo. I would argue that they do more harm than good.”</h3>
+<p>— <span class="citation" data-cites="narayanan2022limits">Narayanan (<a href="#ref-narayanan2022limits" role="doc-biblioref">2022</a>)</span></p>
+</section>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>The use of quantitative methods for assessing discrimination and bias has gained increasing attention in recent years. While some scholars argue that quantitative methods are effective in identifying and addressing discrimination, others, like <span class="citation" data-cites="narayanan2022limits">Narayanan (<a href="#ref-narayanan2022limits" role="doc-biblioref">2022</a>)</span>, contend that they serve to justify the status quo and do more harm than good. In this essay, I will examine Narayanan’s position and engage with a number of scholarly sources to discuss the uses, benefits, and downsides of quantitative methods. I will also present my argument and position on Narayanan’s claim.</p>
+<section id="narayanans-position" class="level3">
+<h3 class="anchored" data-anchor-id="narayanans-position">Narayanan’s Position</h3>
+<p><span class="citation" data-cites="narayanan2022limits">Narayanan (<a href="#ref-narayanan2022limits" role="doc-biblioref">2022</a>)</span> argues that quantitative methods for assessing discrimination and bias are primarily used to justify the status quo, and do more harm than good. He posits that statistical models and algorithms are not neutral, but rather reflect the values and assumptions of their creators. As a result, when quantitative methods are used to study social phenomena, they tend to perpetuate existing power structures and social hierarchies. For instance, machine learning algorithms used in hiring or loan approval processes may be biased against certain groups, reflecting the historical discrimination and inequality that exist in society. According to Narayanan, relying on quantitative methods risks reinforcing these existing power structures, rather than challenging them.</p>
+</section>
+<section id="the-uses-and-benefits-of-quantitative-methods" class="level3">
+<h3 class="anchored" data-anchor-id="the-uses-and-benefits-of-quantitative-methods">The Uses and Benefits of Quantitative Methods</h3>
+<p>While Narayanan argues that quantitative methods do more harm than good, other scholars have identified various uses and benefits of quantitative methods. One benefit is that statistical models and machine learning algorithms can identify and address disparities in healthcare outcomes. <span class="citation" data-cites="landon2003physician">Landon et al. (<a href="#ref-landon2003physician" role="doc-biblioref">2003</a>)</span> used statistical methods to show that African American patients are less likely to receive appropriate treatment for cardiovascular disease than white patients. They “conclude that important technical barriers stand in the way of using physician clinical performance assessment for evaluating the competency of individual physicians.” This research has led to efforts to address the underlying causes of these disparities, such as unequal access to healthcare and implicit bias among healthcare providers.</p>
+<p>Similarly, <span class="citation" data-cites="pager2008sociology">Pager and Shepherd (<a href="#ref-pager2008sociology" role="doc-biblioref">2008</a>)</span> used statistical methods to evaluate the impact of affirmative action policies on employment outcomes. They “provide an overview of major findings from studies of discrimination in each of the four domains [employment, housing, credit markets, and consumer interactions]; and, finally, [they] turn to a discussion of the individual, organizational, and structural mechanisms that may underlie contemporary forms of discrimination.” Their research can help policymakers design more effective policies that promote social justice and reduce discrimination.</p>
+<p>Additionally, <span class="citation" data-cites="aylin2017semantics">Caliskan, Bryson, and Narayanan (<a href="#ref-aylin2017semantics" role="doc-biblioref">2017</a>)</span> developed methods for auditing machine learning algorithms to identify sources of bias and discrimination, ensuring that algorithms are fair and unbiased. They showed “that applying machine learning to ordinary human language results in human-like semantic biases,” meaning data could be analyzed for bias. Narayanan was actually one of the authors in this paper, which shows how this might have influenced his opinions.</p>
+<p>Lastly, <span class="citation" data-cites="crooks2012intro">Crooks and Heppenstall (<a href="#ref-crooks2012intro" role="doc-biblioref">2012</a>)</span> also suggest that quantitative methods can be used to analyze and understand complex urban systems. They argue that these methods can contribute to the development of more inclusive and sustainable cities, stating that it “is powerful paradigm that holds great promise for facilitating greater understanding of geographical systems.” They suggest that quantitative methods can be combined with qualitative methods to provide a more comprehensive understanding of urban phenomena.</p>
+</section>
+<section id="more-support" class="level3">
+<h3 class="anchored" data-anchor-id="more-support">More Support</h3>
+<p>Diving deeper into their study (<span class="citation" data-cites="pager2008sociology">Pager and Shepherd (<a href="#ref-pager2008sociology" role="doc-biblioref">2008</a>)</span>) on discrimination in hiring, Pager and Shepherd found how affirmative action policies resulted in significant improvements in the employment outcomes of African American and Latino candidates. The policies helped to reduce discrimination in hiring and promote social justice. Similarly, <span class="citation" data-cites="hasan2020quantitative">Smith and Hasan (<a href="#ref-hasan2020quantitative" role="doc-biblioref">2020</a>)</span> argues that quantitative methods can be used to promote fairness in algorithmic decision-making. In their research, it had far-reaching concequences in psychiatric patients whose background could be well understood by their model. By defining fairness mathematically and incorporating it into algorithms, we can reduce bias and promote social justice.</p>
+<blockquote class="blockquote">
+<p>In their notable investigation, <span class="citation" data-cites="dressel2018accuracy">Dressel and Farid (<a href="#ref-dressel2018accuracy" role="doc-biblioref">2018</a>)</span> scrutinized the accuracy of COMPAS, a widely utilized commercial algorithm employed in the realm of criminal justice decision-making. The study brought to light a troubling revelation: the algorithm exhibited bias against African American defendants, as they were disproportionately categorized as high-risk compared to their white counterparts. This finding not only raises significant concerns about the fairness and equity of the criminal justice system but also underscores the urgent necessity for enhanced transparency and accountability in algorithmic decision-making.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>The ramifications of biased algorithms in criminal justice decision-making are profound. The overrepresentation of African American defendants classified as high-risk could potentially lead to harsher sentences, increased pretrial detention, and a perpetuation of existing racial disparities within the system. Such biased outcomes deepen social inequalities and undermine public trust in the fairness of the justice system.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>To address these challenges, it is imperative to establish greater transparency in algorithmic decision-making processes. This entails a comprehensive understanding of how algorithms are developed, the data they are trained on, and the potential biases embedded within them. The lack of transparency surrounding proprietary algorithms, like COMPAS, has raised concerns about the potential opacity and inscrutability of these systems.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Accountability is equally crucial. There should be mechanisms in place to assess the performance and impact of algorithms in real-world contexts. This includes conducting regular audits, evaluating the accuracy and fairness of algorithmic outcomes, and addressing any identified biases promptly. Establishing clear guidelines and standards for the use of algorithms in the criminal justice system can help mitigate the potential harm caused by biased decision-making.</p>
+</blockquote>
+<p><span class="citation" data-cites="lamont2002study">Lamont and Molnár (<a href="#ref-lamont2002study" role="doc-biblioref">2002</a>)</span> suggest that quantitative methods can reinforce existing power structures and ideologies. They argue that quantitative methods tend to prioritize “objective” and “scientific” knowledge, which is often based on dominant cultural assumptions and perspectives. This approach can lead to the exclusion of diverse perspectives and the marginalization of underrepresented groups.</p>
+<p>Finally, <span class="citation" data-cites="blodgett2020language">Blodgett et al. (<a href="#ref-blodgett2020language" role="doc-biblioref">2020</a>)</span> argue that quantitative methods can be used to address historical inequalities and promote social justice. They argue that by collecting and analyzing data on the experiences of marginalized groups, we can identify and address systemic inequalities. This approach can help to promote social justice and reduce discrimination.</p>
+</section>
+<section id="argument-and-position" class="level3">
+<h3 class="anchored" data-anchor-id="argument-and-position">Argument and Position</h3>
+<p>In conclusion, while <span class="citation" data-cites="narayanan2022limits">Narayanan (<a href="#ref-narayanan2022limits" role="doc-biblioref">2022</a>)</span> argues that quantitative methods do more harm than good, the scholarly sources reviewed in this essay demonstrate that quantitative methods can be effective in identifying and addressing discrimination. While there are instances where quantitative methods may serve to justify the status quo and perpetuate existing power structures, they can also be used to promote social justice and reduce discrimination. The key, like for many things in life, is to take into account all factors. This is easier said than done.</p>
+</section>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>Narayanan’s argument that quantitative methods are primarily used to justify the status quo and do more harm than good is a valid concern. However, it does not mean that quantitative methods should not be used in the analysis of discrimination and bias. Rather, it highlights the need for a critical examination of the way these methods are used and the context in which they are applied.</p>
+<p>Quantitative methods are a valuable tool in uncovering patterns of discrimination and bias that may be hidden in complex data. As a result, they can be used to hold institutions and individuals accountable for their actions. However, the analysis of discrimination and bias should not be reduced to a simple numbers game, where the goal is to achieve statistical parity. It is important to recognize that discrimination and bias are systemic issues that require a more comprehensive approach.</p>
+<p>Therefore, it is essential to consider the limitations of quantitative methods and to use them in conjunction with qualitative methods and other forms of analysis to gain a more holistic understanding of the problem. In doing so, we can ensure that we are not only identifying patterns of discrimination and bias but also developing effective strategies to address them.</p>
+<p>In conclusion, Narayanan’s assertion that quantitative methods can do more harm than good is an important reminder that we need to be mindful of the ways in which we use these methods. While quantitative methods can be a valuable tool in uncovering patterns of discrimination and bias, they are not a panacea. To fully understand and address discrimination and bias, we need to take a more comprehensive approach that includes both quantitative and qualitative methods, as well as a critical examination of the social and political contexts in which discrimination and bias occur.</p>
+
+
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-blodgett2020language" class="csl-entry" role="doc-biblioentry">
+Blodgett, Su Lin, Solon Barocas, Hal Daumé III, and Hanna Wallach. 2020. <span>“Language (Technology) Is Power: A Critical Survey of <span>“</span>Bias<span>”</span> in <span>NLP</span>,”</span> July, 5454–76. <a href="https://doi.org/10.18653/v1/2020.acl-main.485">https://doi.org/10.18653/v1/2020.acl-main.485</a>.
+</div>
+<div id="ref-aylin2017semantics" class="csl-entry" role="doc-biblioentry">
+Caliskan, Aylin, Joanna J. Bryson, and Arvind Narayanan. 2017. <span>“Semantics Derived Automatically from Language Corpora Contain Human-Like Biases.”</span> <em>Science</em> 356 (6334): 183–86. <a href="https://doi.org/10.1126/science.aal4230">https://doi.org/10.1126/science.aal4230</a>.
+</div>
+<div id="ref-crooks2012intro" class="csl-entry" role="doc-biblioentry">
+Crooks, Andrew, and A. J. Heppenstall. 2012. <span>“Introduction to Agent-Based Modelling.”</span> <em>Agent-Based Models of Geographical Systems</em>, January, 85–105. <a href="https://doi.org/10.1007/978-90-481-8927-4_5">https://doi.org/10.1007/978-90-481-8927-4_5</a>.
+</div>
+<div id="ref-dressel2018accuracy" class="csl-entry" role="doc-biblioentry">
+Dressel, Julia, and Hany Farid. 2018. <span>“The Accuracy, Fairness, and Limits of Predicting Recidivism.”</span> <em>Science Advances</em> 4 (1): eaao5580. <a href="https://doi.org/10.1126/sciadv.aao5580">https://doi.org/10.1126/sciadv.aao5580</a>.
+</div>
+<div id="ref-lamont2002study" class="csl-entry" role="doc-biblioentry">
+Lamont, Michèle, and Virág Molnár. 2002. <span>“The Study of Boundaries Across the Social Sciences.”</span> <em>Annual Review of Sociology</em> 28: 167–95.
+</div>
+<div id="ref-landon2003physician" class="csl-entry" role="doc-biblioentry">
+Landon, Bruce E., Sharon-Lise T. Normand, David Blumenthal, and Jennifer Daley. 2003. <span>“<span class="nocase">Physician Clinical Performance AssessmentProspects and Barriers</span>.”</span> <em>JAMA</em> 290 (9): 1183–89. <a href="https://doi.org/10.1001/jama.290.9.1183">https://doi.org/10.1001/jama.290.9.1183</a>.
+</div>
+<div id="ref-narayanan2022limits" class="csl-entry" role="doc-biblioentry">
+Narayanan, Arvind. 2022. <span>“The Limits of the Quantitative Approach to Discrimination.”</span> Speech.
+</div>
+<div id="ref-pager2008sociology" class="csl-entry" role="doc-biblioentry">
+Pager, Devah, and Hana Shepherd. 2008. <span>“The Sociology of Discrimination: Racial Discrimination in Employment, Housing, Credit, and Consumer Markets.”</span> <em>Annual Review of Sociology</em> 34 (1): 181–209. <a href="https://doi.org/10.1146/annurev.soc.33.040406.131740">https://doi.org/10.1146/annurev.soc.33.040406.131740</a>.
+</div>
+<div id="ref-hasan2020quantitative" class="csl-entry" role="doc-biblioentry">
+Smith, Justin D., and Mohamed Hasan. 2020. <span>“Quantitative Approaches for the Evaluation of Implementation Research Studies.”</span> <em>Psychiatry Research</em> 283: 112521. https://doi.org/<a href="https://doi.org/10.1016/j.psychres.2019.112521">https://doi.org/10.1016/j.psychres.2019.112521</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
