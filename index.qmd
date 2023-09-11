@@ -1,5 +1,5 @@
 ---
-title: "Learning About Machine Learning"
+title: "Learning About Machine Learning, Linguistics, Brains, and so much more!"
 listing:
   contents: posts
   sort: "date desc"
