@@ -1,0 +1,50 @@
+<!-- CURRENT STATUS: E -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Lab 08 - Earth</title>
+
+    <!-- gl-matrix and webgl-obj-loader -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/webgl-obj-loader@2.0.8/dist/webgl-obj-loader.min.js"></script>
+
+    <script src="earth.js"></script>
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <center>
+        <img id="earth-color" src="earth.jpg" hidden />
+        <img id="earth-clouds" src="clouds.jpg" hidden />
+        <img id="earth-bump" src="height.jpg" hidden />
+        <img id="background" src="background.jpg" hidden />
+        <canvas width="600" height="600" id="canvas-earth"></canvas>
+      </center>
+    </div>
+  </body>
+
+  <script>
+    let earth;
+    const main = (meshes) => {
+      let mesh = meshes.sphere;
+      mesh.triangles = mesh.indices.slice();
+      mesh.indices = [];
+
+      earth = new WebGLEarth("canvas-earth", mesh);
+      earth.compile();
+      earth.write();
+      earth.draw();
+    };
+
+    window.onload = () => {
+      OBJ.downloadMeshes({
+        sphere: "sphere.obj",
+      }, main);
+    };
+  </script>
+</html>

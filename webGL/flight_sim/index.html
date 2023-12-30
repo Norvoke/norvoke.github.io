@@ -1,0 +1,106 @@
+<!-- CURRENT STATUS: E -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lab 07</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
+    <style>
+      #controls-canvas {
+        background-color: transparent;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        z-index: 10;
+        top: 0px;
+        left: 0px;
+      }
+      #flight-simulator-canvas {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+      }
+      .container {
+        position: relative;
+      }
+    </style>
+    
+    <!-- gl-matrix and webgl-obj-loader -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/webgl-obj-loader@2.0.8/dist/webgl-obj-loader.min.js"></script>
+
+    <!-- utilities and the simulator scripts -->
+    <script type="text/javascript" src="utils.js"></script>
+    <script type="text/javascript" src="simulator.js"></script>
+  </head>
+  <body>
+    <center>
+      <h2>Wizard Flight Simulator</h2>
+        <div id="text-container">
+          <p>Fly home to your tower!</p>
+        </div>
+    </center>
+    <div style="margin: 45px">
+      <center>
+        <input
+          id="show-controls"
+          type="checkbox"
+          onchange="simulator.showControls = !simulator.showControls; simulator.draw();"
+        />
+        <label for="show-controls">Show Controls</label>
+        <input
+          id="speed-input"
+          type="range"
+          min="10"
+          max="200"
+          value="50"
+          step="10"
+          style="width: 200px; display: inline-block"
+          onchange="changeSpeed();"
+        />
+        <label for="speed-input">Speed</label>
+        <select id="select-terrain" onchange="selectTerrain()">
+          <option>Vermont</option>
+          <option selected>Himalayas</option>
+        </select>
+        <button id="pause" onclick="simulator.pause();">start</button>
+      </center>
+      <br />
+      <div class="container">
+        <canvas
+          id="flight-simulator-canvas"
+          width="800"
+          height="500"
+        ></canvas>
+        <canvas id="controls-canvas" width="800" height="500"></canvas>
+      </div>
+      <img id="controls" src="controls.png" hidden />
+    </div>
+
+    <script>
+      let simulator;
+      let originalWazowski;
+      const selectTerrain = () => {
+        simulator.addTerrain(document.getElementById("select-terrain").value);
+        simulator.addWazowski(simulator.objects["terrain"]);
+        simulator.draw();
+      };
+
+      const changeSpeed = () => {
+        simulator.speed = document.getElementById("speed-input").value / 100;
+      };
+
+      main = (meshes) => {
+        originalWazowski = meshes.wazowski;
+        simulator = new FlightSimulator("flight-simulator-canvas");
+        simulator.showControls = document.getElementById("show-controls").checked;
+        selectTerrain();
+      };
+
+      window.onload = () => {
+        OBJ.downloadMeshes({
+            wazowski: "wazowski.obj",
+        }, main);
+      };
+    </script>
+  </body>
+</html>

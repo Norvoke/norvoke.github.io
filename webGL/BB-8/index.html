@@ -1,0 +1,132 @@
+<!-- CURRENT STATUS: E -->
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-light.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
+  <title>Lab 03</title>
+</head>
+
+<body>
+  <div class="markdown-body" style="margin: 45px">
+    <h2>Lab 03: BB-8</h2>
+    <h4>authors: An Adhikari | Ayman Khan | Finn Ellingwood</h4>
+    <center>
+      <canvas id="bb8-canvas" width="600" height="450"></canvas>
+    </center>
+  </div>
+  <script src="renderer.js"></script>
+  <script>
+    // setup materials
+    const mtlGround = {
+      type: "diffuse",
+      km: vec3.fromValues(0.8, 0.6, 0.6),
+    };
+
+    const mtlBB8 = {
+      type: "specular",
+      km: vec3.fromValues(0.7, 0.7, 0.7),
+      ks: vec3.fromValues(0.2, 0.2, 0.2),
+    };
+
+    const mtlEye = {
+      type: "mirror",
+      km: vec3.fromValues(0, 0, 0),
+      ks: vec3.fromValues(1, 1, 1),
+    };
+
+    const mtlRemote = {
+      type: "specular",
+      km: vec3.fromValues(0.4, 0.7, 0.4),
+      ks: vec3.fromValues(0.6, 0.6, 0.5),
+    };
+
+    // geometry parameters
+    const zb = -2.5; // z-location of bb8
+    const rb = 0.385; // body radius
+    const rh = 0.225; // head radius
+    const te = Math.PI / 6;
+    const re = 0.9 * rh;
+    const rp = 100000; // planet radius
+
+    // setup objects (geometry + materials)
+    let planet = new Sphere(
+      vec3.fromValues(0, -rp - 2 * rb, zb),
+      rp,
+      mtlGround
+    );
+    let body = new Sphere(vec3.fromValues(0, -rb, zb), rb, mtlBB8);
+    let head = new Sphere(vec3.fromValues(0, 0, zb), rh, mtlBB8);
+    let eye1 = new Sphere(vec3.fromValues(0, 0.1, zb + re), 0.05, mtlEye);
+    let eye2 = new Sphere(
+      vec3.fromValues(re * Math.sin(te), 0.05, zb + re * Math.cos(te)),
+      0.035,
+      mtlEye
+    );
+    let remote = new Sphere(
+      vec3.fromValues(-0.4, 0.0, zb + 0.5),
+      0.04,
+      mtlRemote
+    );
+
+    // specialize some of the objects to make things look more realistic
+    const orange = vec3.fromValues(0.9, 0.55, 0);
+    const gray = vec3.fromValues(0.4, 0.4, 0.4);
+
+    /**
+     * Returns a base color for the body as a function of surface coordinates.
+     * @param {vec3} p - surface point coordinates.
+     * @returns {vec3} material diffuse reflection coefficient (km)
+     */
+    body.kmFunction = (p) => {
+      const x = p[0];
+      const y = p[1] + rb;
+      const z = p[2] - zb;
+      if (Math.abs(x) > 0.8 * rb && Math.abs(x) < 0.925 * rb) return orange;
+      if (Math.abs(y) > 0.75 * rb && Math.abs(y) < 0.875 * rb) return orange;
+      if (Math.abs(z) > 0.8 * rb && Math.abs(z) < 0.925 * rb) return orange;
+      return mtlBB8.km;
+    };
+
+    /**
+     * Determines whether the surface point should be included in the sphere representing the head.
+     * @param {vec3} p - surface point coordinates.
+     * @returns {bool} whether p is below the cutoff value.
+     */
+    head.cutoff = (p) => {
+      return p[1] < -0.075; // cuts off bottom part of head sphere
+    };
+
+    /**
+     * Returns a base color for the head as a function of surface coordinates.
+     * @param {vec3} p - surface point coordinates.
+     * @returns {vec3} material diffuse reflection coefficient (km)
+     */
+    head.kmFunction = (p) => {
+      const y = p[1];
+      if (Math.abs(y) > 0.75 * rh && Math.abs(y) < 0.85 * rh) return gray;
+      if (Math.abs(y) > 0.675 * rh && Math.abs(y) < 0.725 * rh) return orange;
+      if (y > -0.35 * rh && y < -0.15 * rh) return gray; // "neck" border so BB8 is viewable from below without floating head
+      return mtlBB8.km;
+    };
+
+    // setup the lighting
+    const light = {
+      cl: vec3.fromValues(1, 1, 1),
+      position: vec3.fromValues(10, 2, 10),
+    };
+    const ca = vec3.fromValues(0.5, 0.5, 0.5); // ambient light color
+
+    // render the scene
+    const objects = [planet, body, head, eye1, eye2, remote];
+    const fov = Math.PI / 4.0; // vertical fov
+    let sunset = new Renderer("bb8-canvas", fov, objects, ca, light);
+    sunset.render();
+  </script>
+</body>
+
+</html>

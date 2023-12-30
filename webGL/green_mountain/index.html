@@ -1,0 +1,61 @@
+ <!-- CURRENT STATUS: M -->
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-light.min.css" />
+  <!-- gl-matrix -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
+  <title>Lab 02</title>
+</head>
+
+<body>
+  <div class="markdown-body" style="margin: 45px">
+    <h2>Lab 02: Green Mountain Sunset</h2>
+    <h4>authors: Finn and Lucas</h4>
+    <center>
+      <canvas id="sunset-canvas" width="600" height="300"></canvas>
+    </center>
+  </div>
+  <script src="sunset.js"></script>
+  <script>
+    const sun = new Sphere(vec3.fromValues(-4, 1.5, -10), 2.0);
+    const canvas = document.getElementById("sunset-canvas");
+    const ar = canvas.width / canvas.height;
+    const fov = Math.PI / 4.0;
+    const z0 = -1; // z-component of first triangle
+    const z1 = z0 + 1e-3; // second triangle is slightly in front of first one
+    const z2 = z1 + 1e-3; // third triangle is slightly in front of second one
+    const y0 = -Math.tan(fov / 2); // y-coordinate of the base of all triangles
+    const x0 = 0.8 * ar * y0; // bottom-left vertex of first triangle
+    const base = 0.5; // base length of all triangles
+    const h0 = 0.55; // height of first triangle
+    const h1 = 0.65; // height of second triangle
+    const h2 = 0.525; // height of third triangle
+    const mountains = [
+      new Triangle(
+        [x0, y0, z0],
+        [x0 + base, y0, z0],
+        [x0 + 0.5 * base, y0 + h0, z0]
+      ),
+      new Triangle(
+        [x0 + 0.25 * base, y0, z1],
+        [x0 + 1.25 * base, y0, z1],
+        [x0 + 0.75 * base, y0 + h1, z1]
+      ),
+      new Triangle(
+        [x0 + 0.5 * base, y0, z2],
+        [x0 + 1.5 * base, y0, z2],
+        [x0 + 1.0 * base, y0 + h2, z2]
+      ),
+    ];
+
+    let sunset = new SunsetRenderer("sunset-canvas", fov, sun, mountains);
+    sunset.render();
+  </script>
+</body>
+
+</html>
